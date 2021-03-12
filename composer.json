@@ -1,0 +1,27 @@
+{
+  "name": "gregs-grog/php-hue-niverse",
+  "type": "library",
+  "description": "A PHP library for interacting with the philips hue API",
+  "keywords": ["hue","php","api"],
+  "homepage": "https://tom-gregory.website/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Thomas Gregory",
+      "email": "thomas.a.gregory95@gmail.com",
+      "homepage": "https://tom-gregory.website/",
+      "role": "Developer"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.4.0",
+    "psr/http-client": "1.0.1",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "PHPHue\\": "src/"
+    }
+  }
+}
