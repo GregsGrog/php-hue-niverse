@@ -1,49 +1,57 @@
-# PHPHue
+# PHP-hue-niverse
 ## Overview
 I wrote this library to solve an issue I was having with writing a personal app, it provides a quick and easy way to interact with the philips hue api. Currently only supports local connection.
 ## Setup
-Download the api.php file and include it in your application
-```php
-<?php
-require "api.php"; //Path to api.php file
-
-//first we must authorise the application on the bridge this only needs to be done once and then the username can be stored.
-print_r(PHPHue::authorise()); //This outputs an array that contains an array of the username and an ip address if auto discovery is selected(See more options below).
-
-//Once we have a username we can then use our class.
-$hueApi = new PHPHue("<your-user>");
-$hueApi->get_lights(); //this will get all lights and all fields.
-$hueApi->toggle_light("1"); //we can then toggle a light via its ID.
-
-//This is the simplest setup of this library more details can be found below.
-
-
-
+### Using Composer
+Download the library by using the composer require command:
 ```
+composer require gregs-grog/php-hue-niverse
+```
+All dependencies will be installed alongside the library.
+
+### Getting started
+A simple example of setup that uses the [symfony http client](https://zetcode.com/symfony/httpclient/) as the client that is passed to the client constructor.
+The class then uses this client to call the api. The class is compatible with PSR 7 clients.
+``` PHP
+require './vendor/autoload.php';
+use Symfony\Component\HttpClient\HttpClient;
+
+
+$httpClient = HttpClient::create(); //creates http client the hui api
+try{
+    $auth = \PHPHue\PHPHue::authorise($httpClient); //Sends an authorisation request to the API and returns the bridge IP and a username, keep this safe.
+    echo $auth;
+
+    $hue = new PHPHue\PHPHue($httpClient, "Your ID from auth function"); //pass the username collected from the above request and send it to the class contructor.
+
+    print_r($hue->toggle_light("1")); //toggle light with ID 1
+}catch(Exception $e){
+echo $e;
+}
+```
+
+
 
 ### How to find your hue bridge IP and create a username
-[Phillips tutorial on getting an IP and creating a username](http://www.developers.meethue.com/documentation/getting-started)
+* [Phillips tutorial on getting an IP and creating a username](http://www.developers.meethue.com/documentation/getting-started)
 * Make sure the Bridge is connected to the network and working. Check that your smartphone can connect.
-* [Visit this link if an IP address is returned in the InternalAdress field then your bridge is connected correctly](https://discovery.meethue.com).
+* [Visit this link if an IP address is returned in the InternalAddress field then your bridge is connected correctly](https://discovery.meethue.com).
 
 
-### Lights API functions
-
-```php
-<?php
-$hueApi->toggle_light("1"); //Toggle light via ID
-$hueApi->get_lights(); //Gets all Lights
-$hueApi->get_new_lights(); //Gets any New lights since last check of get_lights
-$hueApi->rename_light("1", "Name"); //Renames light using ID and Name
-$hueApi->set_light_colour("1", "255", "255", "32000"); //set colour of light using ID, saturation, brightness and hue [Find more info here](https://developers.meethue.com/develop/hue-api/lights-api/)
-
+### Other examples of API calls
+This library is still in progress, so some calls are missing or still being implemented.
+```PHP
+$hue->toggle_light($light_id);
+$hue->get_light($light_id);
+$hue->set_light_colour($light_id, $light_sat, $light_bri, $light_hue);
+$hue->get_new_lights();
+$hue->get_all_lights();
+$hue->rename_light($light_id, $light_name);
+$hue->delete_light($light_id);
+$hue->get_all_groups();
+$hue->create_group($light_id_array, $group_name, $light_type, $room_type);
+$hue->get_group($group_id);
+$hue->get_all_schedules();
+$hue->get_schedule($schedule_id);
+$hue->delete_schedule($schedule_id);
 ```
-
-### Groups API Functions
-```php
-<?php
-$hueApi->get_group("1"); //Gets group Via ID
-$hueApi->create_group(array("1", "2", "3"), "TestGroup3", "Room", "Hallway"); //Creates group with an array of light ID's, a name for the group a group type and a location if group type is set to room.
-
-```
-### This documentation is still being worked on and is due to change
