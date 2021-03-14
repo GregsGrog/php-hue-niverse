@@ -48,9 +48,15 @@ $hue->get_new_lights();
 $hue->get_all_lights();
 $hue->rename_light($light_id, $light_name);
 $hue->delete_light($light_id);
+
 $hue->get_all_groups();
 $hue->create_group($light_id_array, $group_name, $light_type, $room_type);
 $hue->get_group($group_id);
+$hue->delete_group($group_id);
+$hue->toggle_group($group_id);
+$hue->rename_group($group_id, $group_name);
+
+
 $hue->get_all_schedules();
 $hue->get_schedule($schedule_id);
 $hue->delete_schedule($schedule_id);

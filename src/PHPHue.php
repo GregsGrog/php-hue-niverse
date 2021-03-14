@@ -121,12 +121,17 @@ class PHPHue
         }
 
         $response = json_decode($response->getContent());
-        if (isset($response[0]->error)) {
-            throw new \Exception($response[0]->error->description);
-        } else {
-            return $response;
+
+
+        if(is_array($response)){
+            if (isset($response[0]->error)) {
+                throw new \Exception($response[0]->error->description);
+            } else {
+                return $response;
+            }
         }
 
+        return $response;
 
     }
 
@@ -375,7 +380,23 @@ class PHPHue
      */
     function get_group($group_id)
     {
+        if (!is_numeric($group_id)) {
+            throw new \Exception('Group ID is not numeric!');
+        }
+
         return $this->callAPI('GET', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/groups' . "/" . $group_id);
+    }
+
+    /**
+     * @param $group_id
+     * @return mixed
+     */
+    function delete_group($group_id){
+        if (!is_numeric($group_id)) {
+            throw new \Exception('Group ID is not numeric!');
+        }
+
+        return $this->callAPI('DELETE', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/groups' . "/" . $group_id);
     }
 
     /**
@@ -411,6 +432,45 @@ class PHPHue
     }
 
 
+    function toggle_group($group_id){
+
+        if (!is_numeric($group_id)) {
+            throw new \Exception('Group ID is not a number!');
+        }
+
+        $group = $this->get_group($group_id);
+
+
+
+        if ($group->action->on === true) {
+            $group_state = false;
+        } elseif ($group->action->on === false) {
+            $group_state = true;
+        } else {
+            throw new \Exception('Could Not get status of Group!');
+        }
+
+        $data_array = array(
+            "on" => $group_state
+        );
+        return $this->callAPI('PUT', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/groups' . "/" . $group_id . "/action", json_encode($data_array));
+    }
+
+    function rename_group($group_id, $group_name){
+
+        if (!strlen($group_name) > 0 && strlen($group_name) < 32) {
+            throw new \Exception('Light Name is too Long!');
+        }
+
+        if (!is_numeric($group_id)) {
+            throw new \Exception('Light ID is not numeric!');
+        }
+
+        $data_array = array(
+            "name" => $group_name,
+        );
+        return $this->callAPI('PUT', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/groups' . "/" . $group_id, json_encode($data_array));
+    }
 }
 
 
