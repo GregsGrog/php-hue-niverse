@@ -9,7 +9,7 @@ namespace PHPHue;
 
 class PHPHue
 {
-
+    use ColorConversion;
 
     private $hue_ip;
     private string $hue_user;
@@ -90,6 +90,13 @@ class PHPHue
 
 
     }
+
+    function test(){
+        print_r($hue->xy_from_hex("#75231d"));
+    }
+
+
+
 
     /**
      * @param $method
@@ -314,6 +321,21 @@ class PHPHue
 
     }
 
+
+    function light_alert($light_id){
+
+        if (!is_numeric($light_id)) {
+            throw new \Exception('Light ID is Invalid.');
+        }
+
+        $data_array = array(
+            "on" => true,
+            "alert" => "select",
+        );
+        return $this->callAPI('PUT', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/lights' . "/" . $light_id . "/state", json_encode($data_array));
+
+    }
+
     function delete_light($light_id)
     {
         if (!is_numeric($light_id)) {
@@ -471,6 +493,8 @@ class PHPHue
         );
         return $this->callAPI('PUT', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/groups' . "/" . $group_id, json_encode($data_array));
     }
+
+
 }
 
 

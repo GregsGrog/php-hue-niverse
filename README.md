@@ -1,6 +1,8 @@
 # PHP-hue-niverse
 ## Overview
 I wrote this library to solve an issue I was having with writing a personal app, it provides a quick and easy way to interact with the philips hue api. Currently only supports local connection.
+## Note
+This library currently only works with lights and bridges connected on the local network, I am working to get this to work with the global system.
 ## Setup
 ### Using Composer
 Download the library by using the composer require command:
@@ -48,6 +50,7 @@ $hue->get_new_lights();
 $hue->get_all_lights();
 $hue->rename_light($light_id, $light_name);
 $hue->delete_light($light_id);
+$hue->light_alert($light_id); //flashes the selected light ID once to show selection
 
 $hue->get_all_groups();
 $hue->create_group($light_id_array, $group_name, $light_type, $room_type);
