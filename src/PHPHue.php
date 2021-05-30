@@ -91,13 +91,6 @@ class PHPHue
 
     }
 
-    function test(){
-        print_r($hue->xy_from_hex("#75231d"));
-    }
-
-
-
-
     /**
      * @param $method
      * @param $url
@@ -142,6 +135,9 @@ class PHPHue
 
     }
 
+    /**
+     * @return mixed
+     */
     private function autoIPDiscovery()
     {
         $response = $this->httpclient->request('GET', 'https://discovery.meethue.com');
@@ -236,7 +232,6 @@ class PHPHue
         return $this->callAPI('GET', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/lights' . '/' . $light_id);
     }
 
-
     /**
      * @param $light_id
      * @param string $light_sat
@@ -321,7 +316,11 @@ class PHPHue
 
     }
 
-
+    /**
+     * @param $light_id
+     * @return array|mixed
+     * @throws \Exception
+     */
     function light_alert($light_id){
 
         if (!is_numeric($light_id)) {
@@ -336,6 +335,11 @@ class PHPHue
 
     }
 
+    /**
+     * @param $light_id
+     * @return array|mixed
+     * @throws \Exception
+     */
     function delete_light($light_id)
     {
         if (!is_numeric($light_id)) {
@@ -345,7 +349,6 @@ class PHPHue
         return $this->callAPI('DELETE', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/lights/' . $light_id);
     }
 
-
     /**
      * @return mixed
      * @throws
@@ -354,7 +357,6 @@ class PHPHue
     {
         return $this->callAPI('GET', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/groups');
     }
-
 
     /**
      * @param $light_array
@@ -393,7 +395,6 @@ class PHPHue
         }
         return $this->callAPI('POST', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/groups', json_encode($data_array));
     }
-
 
     /**
      * @param $group_id
@@ -444,6 +445,11 @@ class PHPHue
         return $this->callAPI('GET', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/schedules/' . $schedule_id);
     }
 
+    /**
+     * @param $schedule_id
+     * @return array|mixed
+     * @throws \Exception
+     */
     function delete_schedule($schedule_id)
     {
         if (!is_numeric($schedule_id)) {
@@ -453,7 +459,11 @@ class PHPHue
         return $this->callAPI('DELETE', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/schedules/' . $schedule_id);
     }
 
-
+    /**
+     * @param $group_id
+     * @return array|mixed
+     * @throws \Exception
+     */
     function toggle_group($group_id){
 
         if (!is_numeric($group_id)) {
@@ -478,6 +488,12 @@ class PHPHue
         return $this->callAPI('PUT', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/groups' . "/" . $group_id . "/action", json_encode($data_array));
     }
 
+    /**
+     * @param $group_id
+     * @param $group_name
+     * @return array|mixed
+     * @throws \Exception
+     */
     function rename_group($group_id, $group_name){
 
         if (!strlen($group_name) > 0 && strlen($group_name) < 32) {
