@@ -270,6 +270,37 @@ class PHPHue
     }
 
     /**
+     * @param $light_id
+     * @param string $light_sat
+     * @param string $light_bri
+     * @param string $light_hue
+     * @return mixed
+     * @throws \Exception
+     */
+    function set_light_colour_hex($light_id, $hex_colour)
+    {
+
+
+        if (!is_numeric($light_id)) {
+            throw new \Exception('Light ID is Invalid.');
+        }
+        if (!isset($hex_colour)) {
+            throw new \Exception('No Hex color supplied.');
+        }
+
+        $xy_cords = $this->xy_from_hex($hex_colour);
+
+        $data_array = array(
+            "on" => true,
+            "xy" => array($xy_cords[0], $xy_cords[1]),
+            "transitiontime" => 2
+        );
+        return $this->callAPI('PUT', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/lights' . "/" . $light_id . "/state", json_encode($data_array));
+
+
+    }
+
+    /**
      * @return mixed
      * @throws \Exception
      */
