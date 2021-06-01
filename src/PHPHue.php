@@ -322,7 +322,7 @@ class PHPHue
      * @throws \Exception
      */
     function light_alert($light_id){
-
+        //TODO toggle function to remember previous state and revert once alert is complete
         if (!is_numeric($light_id)) {
             throw new \Exception('Light ID is Invalid.');
         }
@@ -331,6 +331,8 @@ class PHPHue
             "on" => true,
             "alert" => "select",
         );
+
+
         return $this->callAPI('PUT', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/lights' . "/" . $light_id . "/state", json_encode($data_array));
 
     }
@@ -508,6 +510,23 @@ class PHPHue
             "name" => $group_name,
         );
         return $this->callAPI('PUT', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/groups' . "/" . $group_id, json_encode($data_array));
+    }
+
+
+    function set_light_brightness($light_id, $light_bri){
+
+        if (!is_numeric($light_id)) {
+            throw new \Exception('Light ID is Invalid.');
+        }
+
+        if (!is_numeric($light_bri) && $light_bri > 0 && $light_bri < 255) {
+            throw new \Exception('Light Brightness is invalid.');
+        }
+
+        $data_array = array(
+            "bri" => intval($light_bri),
+        );
+        return $this->callAPI('PUT', 'https://' . $this->hue_ip . '/api/' . $this->hue_user . '/lights' . "/" . $light_id . "/state", json_encode($data_array));
     }
 
 
